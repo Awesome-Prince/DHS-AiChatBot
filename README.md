@@ -3,7 +3,7 @@
 # 🤖💬 AI Chat Interface 🏫📚
 
 <img src="src/dharam.png" alt="Dharam Logo" width="200" height="200" />
-
+#
 ## Dharam Hinduja School Edition
 > 💡 Empowering Minds, Igniting Futures, One Chat at a Time! 💬
 
