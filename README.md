@@ -126,6 +126,7 @@ project/
 │   │   └── pics.json
 │   ├── dharam.png
 │   └── dharam.jpg
+├── data.txt
 ├── scripts.js
 ├── styles.css
 └── index.html
