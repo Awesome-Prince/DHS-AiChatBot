@@ -1,7 +1,24 @@
-// ... (previous code remains unchanged)
-
 let isGenerating = false;
 let currentRequest = null;
+let conversationHistory = [];
+
+function addMessage(role, content) {
+    const messageElement = document.createElement('div');
+    messageElement.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`;
+    messageElement.innerHTML = `
+        <div class="flex items-start space-x-2 max-w-[80%] ${role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}">
+            <div class="${role === 'user' ? 'user-avatar' : 'ai-avatar'}">
+                ${role === 'user' ? '<i class="fas fa-user"></i>' : '<img src="src/dharam.jpg" alt="AI">'}
+            </div>
+            <div class="message-bubble ${role === 'user' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-900'} text-sm md:text-base shadow-md">
+                ${content}
+            </div>
+        </div>
+    `;
+    document.getElementById('chatContainer').appendChild(messageElement);
+    conversationHistory.push({ role, content });
+    scrollToBottom();
+}
 
 async function sendMessage(message) {
     if (message.trim()) {
@@ -9,10 +26,9 @@ async function sendMessage(message) {
         setThinking(true);
         try {
             currentRequest = axios.CancelToken.source();
-            console.log('Sending request to API...');
             const response = await axios.post('https://api.qewertyy.dev/models', {
                 messages: [
-                    { role: "system", content: schoolData },
+                    { role: "system", content: "You are a helpful assistant." },
                     ...conversationHistory.map(msg => ({
                         role: msg.role,
                         content: msg.content
@@ -22,9 +38,8 @@ async function sendMessage(message) {
                 model_id: 23
             }, {
                 cancelToken: currentRequest.token,
-                timeout: 30000 // 30 seconds timeout
+                timeout: 30000
             });
-            console.log('Received response from API:', response);
             if (response.data.content && response.data.content[0] && response.data.content[0].text) {
                 const aiResponse = response.data.content[0].text;
                 addMessage('assistant', aiResponse);
@@ -33,13 +48,7 @@ async function sendMessage(message) {
             }
         } catch (error) {
             console.error('Error in sendMessage:', error);
-            if (axios.isCancel(error)) {
-                console.log('Request canceled:', error.message);
-            } else if (error.code === 'ECONNABORTED') {
-                addNotification('error', 'Request timed out. Please try again.');
-            } else {
-                addNotification('error', `Failed to get response. Please try again. Error: ${error.message}`);
-            }
+            addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
         } finally {
             setThinking(false);
             currentRequest = null;
@@ -49,8 +58,7 @@ async function sendMessage(message) {
 }
 
 function setThinking(thinking) {
-    console.log('setThinking:', thinking);
-    const existingThinkingElement = chatContainer.querySelector('.thinking-indicator');
+    const existingThinkingElement = document.querySelector('.thinking-indicator');
     if (thinking) {
         if (!existingThinkingElement) {
             const thinkingElement = document.createElement('div');
@@ -69,22 +77,24 @@ function setThinking(thinking) {
                     </div>
                 </div>
             `;
-            chatContainer.appendChild(thinkingElement);
+            document.getElementById('chatContainer').appendChild(thinkingElement);
         }
-        setGenerating(true);
+        isGenerating = true;
     } else {
         if (existingThinkingElement) {
             existingThinkingElement.remove();
         }
-        setGenerating(false);
+        isGenerating = false;
     }
-    scrollToBottom();
+    updateSendButton();
 }
 
-function setGenerating(generating) {
-    console.log('setGenerating:', generating);
-    isGenerating = generating;
-    if (generating) {
+function updateSendButton() {
+    const sendButton = document.getElementById('sendButton');
+    const sendIcon = document.getElementById('sendIcon');
+    const sendText = document.getElementById('sendText');
+    
+    if (isGenerating) {
         sendIcon.className = 'fas fa-stop h-4 w-4 md:mr-2';
         sendText.textContent = 'Stop';
         sendButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
@@ -97,59 +107,44 @@ function setGenerating(generating) {
     }
 }
 
-function initializeChat() {
-    console.log('Initializing chat...');
-    loadStoredHistory();
-    updateClearHistoryButton();
-    scrollToBottom();
+function scrollToBottom() {
+    const chatContainer = document.getElementById('chatContainer');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
 
-    // Ensure the chat form is properly set up
+function initializeChat() {
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
 
     chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log('Form submitted');
         const message = userInput.value.trim();
         if (isGenerating) {
-            console.log('Cancelling current request');
             if (currentRequest) {
                 currentRequest.cancel('Operation canceled by the user.');
             }
             setThinking(false);
         } else if (message) {
-            console.log('Sending message:', message);
             sendMessage(message);
             userInput.value = '';
         }
     });
 }
 
-// Modify the window load event listener
-window.addEventListener('load', () => {
-    console.log('Window loaded');
-    
-    // Check if it's the user's first visit
-    if (!localStorage.getItem('hasVisited')) {
-        console.log('First visit, showing welcome page');
-        document.getElementById('welcomePage').style.display = 'block';
-        document.getElementById('mainContent').classList.add('hidden');
-        localStorage.setItem('hasVisited', 'true');
-    } else {
-        console.log('Returning user, showing main content');
-        showMainContent();
-    }
-});
-
 function showMainContent() {
-    console.log('Showing main content');
     document.getElementById('welcomePage').style.display = 'none';
     document.getElementById('mainContent').classList.remove('hidden');
     initializeChat();
 }
 
-// ... (rest of the code remains unchanged)
+window.addEventListener('load', () => {
+    if (!localStorage.getItem('hasVisited')) {
+        document.getElementById('welcomePage').style.display = 'block';
+        document.getElementById('mainContent').classList.add('hidden');
+        localStorage.setItem('hasVisited', 'true');
+    } else {
+        showMainContent();
+    }
+});
 
-// Make initializeChat and showMainContent available globally
-window.initializeChat = initializeChat;
 window.showMainContent = showMainContent;
