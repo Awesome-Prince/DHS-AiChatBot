@@ -28,6 +28,7 @@ async function sendMessage(message) {
         setThinking(true);
         try {
             currentRequest = axios.CancelToken.source();
+            console.log('Sending request to API...');
             const response = await axios.post('https://api.qewertyy.dev/models', {
                 messages: [
                     { role: "system", content: "You are a helpful assistant." },
@@ -42,15 +43,32 @@ async function sendMessage(message) {
                 cancelToken: currentRequest.token,
                 timeout: 30000
             });
+            console.log('Received response from API:', response);
             if (response.data && response.data.content) {
                 const aiResponse = response.data.content;
                 addMessage('assistant', aiResponse);
             } else {
+                console.error('Unexpected response structure:', response.data);
                 throw new Error('Unexpected response structure');
             }
         } catch (error) {
             console.error('Error in sendMessage:', error);
-            addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+            if (axios.isCancel(error)) {
+                console.log('Request canceled:', error.message);
+            } else if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('Error request:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error message:', error.message);
+            }
+            addMessage('assistant', 'Sorry, I encountered an error. Please try again. (Error: ' + error.message + ')');
         } finally {
             setThinking(false);
             currentRequest = null;
