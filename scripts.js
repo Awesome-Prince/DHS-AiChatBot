@@ -7,8 +7,10 @@ function addMessage(role, content) {
     messageElement.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`;
     messageElement.innerHTML = `
         <div class="flex items-start space-x-2 max-w-[80%] ${role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}">
-            <div class="${role === 'user' ? 'user-avatar' : 'ai-avatar'}">
-                ${role === 'user' ? '<i class="fas fa-user"></i>' : '<img src="src/dharam.jpg" alt="AI">'}
+            <div class="${role === 'user' ? 'user-avatar' : 'ai-avatar'} w-8 h-8 flex items-center justify-center rounded-full ${role === 'user' ? 'bg-blue-500' : 'bg-gray-200'}">
+                ${role === 'user' 
+                    ? '<i class="fas fa-user text-white text-sm"></i>' 
+                    : '<img src="src/dharam.jpg" alt="AI" class="w-full h-full object-cover rounded-full">'}
             </div>
             <div class="message-bubble ${role === 'user' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-900'} p-3 rounded-lg text-sm md:text-base shadow-md">
                 ${content}
@@ -65,8 +67,8 @@ function setThinking(thinking) {
             thinkingElement.className = 'flex justify-start animate-fade-in-up thinking-indicator';
             thinkingElement.innerHTML = `
                 <div class="flex items-end space-x-2 max-w-[80%]">
-                    <div class="w-8 h-8 bg-transparent rounded-full">
-                        <img src="src/dharam.jpg" alt="AI" class="ai-logo">
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <img src="src/dharam.jpg" alt="AI" class="w-full h-full object-cover rounded-full">
                     </div>
                     <div class="p-3 rounded-lg bg-blue-100 text-sm md:text-base shadow-md">
                         <div class="flex space-x-2">
