@@ -32,7 +32,7 @@ async function sendMessage(message) {
                 messages: [
                     { role: "system", content: "You are a helpful assistant." },
                     ...conversationHistory.map(msg => ({
-                        role: msg.role,
+                        role: msg.role === 'user' ? 'user' : 'assistant',
                         content: msg.content
                     })),
                     { role: "user", content: message }
@@ -42,8 +42,8 @@ async function sendMessage(message) {
                 cancelToken: currentRequest.token,
                 timeout: 30000
             });
-            if (response.data.content && response.data.content[0] && response.data.content[0].text) {
-                const aiResponse = response.data.content[0].text;
+            if (response.data && response.data.content) {
+                const aiResponse = response.data.content;
                 addMessage('assistant', aiResponse);
             } else {
                 throw new Error('Unexpected response structure');
