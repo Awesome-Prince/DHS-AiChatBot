@@ -1,117 +1,132 @@
 <div align="center">
 
-# 🤖💬 AI Chat Interface 🏫📚
+# 🌟 DHS AI Chat Interface 3.0 🚀
 
-<img src="src/dharam.png" alt="Dharam Logo" width="200" height="200" />
-#
+<img src="src/dharam.png" alt="Dharam Logo" width="200" height="200" style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+
 ## Dharam Hinduja School Edition
-> 💡 Empowering Minds, Igniting Futures, One Chat at a Time! 💬
+> *Where Innovation Meets Education* 🎓
 
-[![School Project](https://img.shields.io/badge/🏆-School_Project-brightgreen?style=for-the-badge)](https://dharamhindujaschool.org)
-[![Made by Students](https://img.shields.io/badge/👨‍🎓-Made_by_Students-orange?style=for-the-badge)](https://github.com/Awesome-Prince)
-[![Powered by AI](https://img.shields.io/badge/🧠-Powered_by_AI-blue?style=for-the-badge)](https://github.com/Awesome-Prince/DHS-Chatbot.github.io)
+[![School Project](https://img.shields.io/badge/🏆-School_Project-gradient?style=for-the-badge&color=FF6B6B)](https://dharamhindujaschool.org)
+[![Version 3.0](https://img.shields.io/badge/✨-Version_3.0-gradient?style=for-the-badge&color=4ECDC4)](https://github.com/Awesome-Prince/DHS-Chatbot.github.io)
+[![Made with Love](https://img.shields.io/badge/❤️-Made_with_Love-gradient?style=for-the-badge&color=FF69B4)](https://github.com/Awesome-Prince)
 
 </div>
 
-## ⭐ Features
+## 🎯 Revolutionary Features
 
-- **💬 Intelligent Conversational AI**: Engage in thought-provoking discussions with our AI assistant.
-- **🎨 Sleek, Animated UI**: Enjoy a visually stunning interface with smooth animations.
-- **📱 Fully Responsive**: Seamless experience across all devices - desktop, tablet, and mobile.
-- **🔍 Multi-Section Navigation**: Easily switch between Home, About, and Contact sections.
-- **🔒 User-Friendly Reporting**: Built-in system for reporting issues or inappropriate content.
-- **📋 One-Click Copying**: Instantly copy AI responses to your clipboard.
-- **🔄 Response Regeneration**: Not satisfied? Regenerate AI responses with a single click.
-- **💾 Local Message Storage**: User and AI messages are stored locally to improve AI responses. Clear your chat history anytime by clicking the delete icon in the header—your privacy matters! 🔏
+### 🤖 AI Intelligence
+- **Dynamic Context Understanding**: Advanced AI that learns and adapts
+- **Smart Image Integration**: Context-aware image responses
+- **Multi-Turn Conversations**: Natural, flowing dialogues
+- **School-Specific Knowledge**: Customized educational responses
 
-## 🛠️ Technologies
+### 🎨 Enhanced UI/UX
+- **Responsive Design**: Perfect on any device
+- **Smooth Animations**: Polished user experience
+- **Dynamic Loading**: Elegant loading states
+- **Interactive Elements**: Rich user interactions
 
-This project leverages a powerful stack of modern web technologies:
+### 🔧 Technical Innovations
+- **Dynamic Image Handling**: Automatic folder discovery
+- **Smart Content Formatting**: Markdown & code support
+- **Local Storage**: Persistent chat history
+- **Real-Time Typing**: Live interaction feedback
 
-<p align="center">
-  <img src="https://img.shields.io/badge/HTML5-FF5733?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/CSS3-3066BE?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
-  <img src="https://img.shields.io/badge/JavaScript-FFD700?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Font_Awesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white" alt="Font Awesome" />
-</p>
-
----
+## 💫 New in Version 3.0
 
 <div align="center">
 
-## 🚀 Features That'll Blow Your Mind
+| 🌟 Feature | 🎯 Description | 🔥 Impact |
+|:----------:|:-------------:|:---------:|
+| Smart Image System | Context-aware image responses | Enhanced visual learning |
+| Dynamic Folders | Automatic content organization | Better resource management |
+| Advanced UI | Sleek, modern interface | Improved user experience |
+| Performance Boost | Optimized code base | Faster response times |
 
-| 🧠 Smart AI | 🎨 Awesome UI | 📱 Works Everywhere |
-|:-----------:|:-------------:|:-------------------:|
-| Ask anything about our school, and get instant, accurate answers! | Eye-candy design that makes learning a visual treat. | Whether you're on your phone, tablet, or computer, we're there! |
-
-| 🔍 Easy to Use | 🛡️ Safe & Secure | 🔄 Quick Refresh |
-|:--------------:|:----------------:|:----------------:|
-| So simple, even your grandma could use it! (But it's for students, sorry grandma!) | Your data is treated like a state secret. Fort Knox level! | Get the latest info faster than you can say "update"! |
-
----
-
-## 💥 Blast Off: How to Use Our Chat
-
-1. **💬 Chat Interface:** Simply type your question or prompt in the input field and hit send.
-2. **🗺️ Navigation:** Use the menu button (top-left) to switch between different sections.
-3. **🚨 Reporting:** Found an issue? Use the flag icon to report problematic content.
-4. **📋 Copy & Regenerate:** Easily copy or regenerate AI responses using the provided buttons.
-5. **🗑️ Clear History:** Want to start fresh? Click the delete icon in the header to clear your chat history and protect your privacy.
-
----
-
-## 📸 Project Showcase
-
-<p align="center">
-  <img src="src/screenshot_ 1.jpg" alt="Chat Interface" width="48%" />
-  <img src="src/screenshot_2.jpg" alt="About Section" width="48%" />
-</p>
-
----
 </div>
 
-## 🌈 Welcome to the Future of Learning!
-
-Imagine a world where knowledge is just a chat away. That's what we've created here at Dharam Hinduja School! Our AI Chat Interface is not just a project; it's a revolution in how students interact with information.
-
-## 👨‍💻 The Mastermind Behind the Magic
-
-<div align="center">
-  <h3>🌟 Harish: The Code Wizard 🧙‍♂️</h3>
-  <p><em>Turning caffeine into code since 2009</em></p>
-  
-  [![Contact Harish](https://img.shields.io/badge/📧_Contact_Harish-Slide_Into_My_DMs-blue?style=for-the-badge)](https://awesome-prince.github.io)
-</div>
-
-> This innovative project was brought to life by **Harish**, a visionary student at Dharam Hinduja Matriculation Higher Secondary School. Harish's passion for technology and education shines through in every aspect of this AI Chat Interface.
-
----
-
-## 📞 Reach Out and Touch Base
+## 🛠️ Technical Stack
 
 <div align="center">
 
-| 📧 Shoot Us an Email | 📞 Give Us a Ring | 🌐 Surf Our Web |
-|:--------------------:|:-----------------:|:---------------:|
-| [dharam_hinduja@yahoo.com](mailto:dharam_hinduja@yahoo.com) | [(044) 2572-7553](tel:+914425727553) | [Our Digital Home](https://dharamhindujaschool.org) |
-
-## School Location 📍
-
-**Our Secret Lair (aka School Address):**
-No.19, Poonthottam Street, Tiruvottiyur, Chennai - 600 019, Tamilnadu
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.spec.whatwg.org/)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)](https://axios-http.com/)
 
 </div>
 
----
+## 🎨 UI Showcase
+
+<div align="center">
+<img src="src/screenshot_1.jpg" alt="Chat Interface" width="48%" style="border-radius: 10px; margin: 10px;" />
+<img src="src/screenshot_2.jpg" alt="About Section" width="48%" style="border-radius: 10px; margin: 10px;" />
+
+*Experience our stunning interface in action*
+</div>
+
+## 🚀 Technical Highlights
+
+### 💡 Smart Image System
+- Dynamic folder discovery
+- Context-aware image selection
+- Automatic content categorization
+- Responsive image loading
+
+### ⚡ Performance
+- Optimized asset loading
+- Efficient state management
+- Smart caching system
+- Minimal network requests
+
+### 🛡️ Security
+- Secure data handling
+- Local storage encryption
+- Privacy-first approach
+- Safe content delivery
+
+## 👨‍💻 Development Team
 
 <div align="center">
 
-### 💖 Crafted with Love, Debugged with Patience 💻
+### 🌟 Lead Developer: Harish
 
-<p>Bringing a Slice of Silicon Valley to Dharam Hinduja School!</p>
+[![Portfolio](https://img.shields.io/badge/🌐_Portfolio-Visit_Now-gradient?style=for-the-badge&color=FF6B6B)](https://awesome-prince.github.io)
+[![GitHub](https://img.shields.io/badge/💻_GitHub-Follow_Me-gradient?style=for-the-badge&color=4ECDC4)](https://github.com/Awesome-Prince)
 
-<img src="src/dharam.png" alt="Dharam Hinduja School Logo" width="100">
+*"Innovating education through technology"*
 
 </div>
+
+## 📱 Connect With Us
+
+<div align="center">
+
+| 📧 Email | 📞 Phone | 🌐 Website |
+|:--------:|:--------:|:----------:|
+| [dharam_hinduja@yahoo.com](mailto:dharam_hinduja@yahoo.com) | [(044) 2572-7553](tel:+914425727553) | [dharamhindujaschool.org](https://dharamhindujaschool.org) |
+
+### 📍 Visit Us
+Dharam Hinduja School  
+No.19, Poonthottam Street  
+Tiruvottiyur, Chennai - 600 019  
+Tamil Nadu, India
+
+</div>
+
+## 🌟 Project Structure
+
+```plaintext
+project/
+├── src/
+│   ├── imgs/
+│   │   ├── [Images Folders]/
+│   │   └── pics.json
+│   ├── dharam.png
+│   └── dharam.jpg
+├── data.txt
+├── scripts.js
+├── styles.css
+└── index.html
