@@ -14,10 +14,17 @@ function WelcomePage() {
   }, []);
 
   const handleStartChatting = () => {
-    if (typeof window.showMainContent === 'function') {
-      window.showMainContent();
+    const welcomePage = document.getElementById('welcomePage');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (welcomePage && mainContent) {
+      welcomePage.style.display = 'none';
+      mainContent.classList.remove('hidden');
+      if (typeof window.initializeChat === 'function') {
+        window.initializeChat();
+      }
     } else {
-      console.error('showMainContent function not found');
+      console.error('Welcome page or main content elements not found');
     }
   };
 
