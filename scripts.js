@@ -10,7 +10,7 @@ function addMessage(role, content) {
             <div class="${role === 'user' ? 'user-avatar' : 'ai-avatar'}">
                 ${role === 'user' ? '<i class="fas fa-user"></i>' : '<img src="src/dharam.jpg" alt="AI">'}
             </div>
-            <div class="message-bubble ${role === 'user' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-900'} text-sm md:text-base shadow-md">
+            <div class="message-bubble ${role === 'user' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-900'} p-3 rounded-lg text-sm md:text-base shadow-md">
                 ${content}
             </div>
         </div>
@@ -118,7 +118,7 @@ function initializeChat() {
     const sendButton = document.getElementById('sendButton');
 
     function handleSubmit(e) {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
         const message = userInput.value.trim();
         if (isGenerating) {
             if (currentRequest) {
@@ -133,17 +133,15 @@ function initializeChat() {
 
     chatForm.addEventListener('submit', handleSubmit);
     
-    // Add event listener for Enter key press
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); // Prevent default to avoid form submission
-            sendButton.click(); // Trigger the send button click
+            e.preventDefault();
+            sendButton.click();
         }
     });
 
-    // Add click event listener to send button
     sendButton.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default button behavior
+        e.preventDefault();
         handleSubmit(e);
     });
 }
@@ -164,4 +162,5 @@ window.addEventListener('load', () => {
     }
 });
 
+window.initializeChat = initializeChat;
 window.showMainContent = showMainContent;
