@@ -3,7 +3,6 @@ let currentRequest = null;
 let conversationHistory = [];
 let schoolData = '';
 
-// Function to read the data.txt file
 async function readDataFile() {
     try {
         const response = await fetch('data.txt');
@@ -45,6 +44,17 @@ async function sendMessage(message) {
         try {
             currentRequest = axios.CancelToken.source();
             console.log('Sending request to API...');
+            console.log('Request payload:', {
+                messages: [
+                    { role: "system", content: schoolData },
+                    ...conversationHistory.map(msg => ({
+                        role: msg.role === 'user' ? 'user' : 'assistant',
+                        content: msg.content
+                    })),
+                    { role: "user", content: message }
+                ],
+                model_id: 23
+            });
             const response = await axios.post('https://api.qewertyy.dev/models', {
                 messages: [
                     { role: "system", content: schoolData },
@@ -80,7 +90,9 @@ async function sendMessage(message) {
             } else {
                 console.error('Error message:', error.message);
             }
-            addMessage('assistant', 'Sorry, I encountered an error. Please try again. (Error: ' + error.message + ')');
+            // Fallback response
+            const fallbackResponse = "I apologize, but I'm having trouble connecting to my knowledge base right now. Could you please try asking your question again in a moment?";
+            addMessage('assistant', fallbackResponse);
         } finally {
             setThinking(false);
             currentRequest = null;
@@ -178,6 +190,9 @@ async function initializeChat() {
         e.preventDefault();
         handleSubmit(e);
     });
+
+    // Add an initial message to the chat
+    addMessage('assistant', 'Hello! How can I assist you today?');
 }
 
 async function showMainContent() {
