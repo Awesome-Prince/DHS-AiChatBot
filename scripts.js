@@ -1,6 +1,22 @@
 let isGenerating = false;
 let currentRequest = null;
 let conversationHistory = [];
+let schoolData = '';
+
+// Function to read the data.txt file
+async function readDataFile() {
+    try {
+        const response = await fetch('data.txt');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        schoolData = await response.text();
+        console.log('School data loaded successfully');
+    } catch (error) {
+        console.error('Error reading data.txt:', error);
+        schoolData = 'You are a helpful assistant.'; // Fallback content
+    }
+}
 
 function addMessage(role, content) {
     const messageElement = document.createElement('div');
@@ -31,7 +47,7 @@ async function sendMessage(message) {
             console.log('Sending request to API...');
             const response = await axios.post('https://api.qewertyy.dev/models', {
                 messages: [
-                    { role: "system", content: "You are a helpful assistant." },
+                    { role: "system", content: schoolData },
                     ...conversationHistory.map(msg => ({
                         role: msg.role === 'user' ? 'user' : 'assistant',
                         content: msg.content
@@ -56,16 +72,12 @@ async function sendMessage(message) {
             if (axios.isCancel(error)) {
                 console.log('Request canceled:', error.message);
             } else if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 console.error('Error response:', error.response.data);
                 console.error('Error status:', error.response.status);
                 console.error('Error headers:', error.response.headers);
             } else if (error.request) {
-                // The request was made but no response was received
                 console.error('Error request:', error.request);
             } else {
-                // Something happened in setting up the request that triggered an Error
                 console.error('Error message:', error.message);
             }
             addMessage('assistant', 'Sorry, I encountered an error. Please try again. (Error: ' + error.message + ')');
@@ -132,7 +144,9 @@ function scrollToBottom() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-function initializeChat() {
+async function initializeChat() {
+    await readDataFile(); // Read the data.txt file before initializing the chat
+
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
@@ -166,19 +180,19 @@ function initializeChat() {
     });
 }
 
-function showMainContent() {
+async function showMainContent() {
     document.getElementById('welcomePage').style.display = 'none';
     document.getElementById('mainContent').classList.remove('hidden');
-    initializeChat();
+    await initializeChat();
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     if (!localStorage.getItem('hasVisited')) {
         document.getElementById('welcomePage').style.display = 'block';
         document.getElementById('mainContent').classList.add('hidden');
         localStorage.setItem('hasVisited', 'true');
     } else {
-        showMainContent();
+        await showMainContent();
     }
 });
 
