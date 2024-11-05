@@ -55,7 +55,7 @@ fetch('data.txt')
 // Function to discover folders and images
 async function discoverFoldersAndImages() {
     try {
-        const response = await fetch('src/imgs/index.json');
+        const response = await fetch('src/imgs/pics.json');
         if (!response.ok) {
             throw new Error('Failed to fetch image index');
         }
