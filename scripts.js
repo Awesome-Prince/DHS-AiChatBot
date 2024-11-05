@@ -115,9 +115,10 @@ function scrollToBottom() {
 function initializeChat() {
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
 
-    chatForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    function handleSubmit(e) {
+        e.preventDefault(); // Prevent the default form submission
         const message = userInput.value.trim();
         if (isGenerating) {
             if (currentRequest) {
@@ -128,6 +129,22 @@ function initializeChat() {
             sendMessage(message);
             userInput.value = '';
         }
+    }
+
+    chatForm.addEventListener('submit', handleSubmit);
+    
+    // Add event listener for Enter key press
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent default to avoid form submission
+            sendButton.click(); // Trigger the send button click
+        }
+    });
+
+    // Add click event listener to send button
+    sendButton.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default button behavior
+        handleSubmit(e);
     });
 }
 
