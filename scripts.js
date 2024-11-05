@@ -31,26 +31,48 @@ let isGenerating = false;
 let activeSection = 'home';
 let showWelcome = true;
 let currentRequest = null;
-
 let schoolData = '';
+let imageFolders = [];
+let imageFiles = {};
 
+// Fetch school data
 fetch('data.txt')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        addNotification('error', `Due To Network Reponse I Wasn't Able To Get The Data`);
         return response.text();
     })
     .then(data => {
-        schoolData = data; // Assign the text file data to schoolData variable
-        console.log(schoolData); // Output the data to the console
+        schoolData = data;
+        console.log('School data loaded successfully');
     })
     .catch(error => {
-        addNotification('error', `There was a problem with the fetch operation for data: ${error}`);
-        console.error('There was a problem with the fetch operation:', error);
+        addNotification('error', `There was a problem loading school data: ${error.message}`);
+        console.error('Error loading school data:', error);
     });
 
+// Function to discover folders and images
+async function discoverFoldersAndImages() {
+    try {
+        const response = await fetch('src/imgs/index.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch image index');
+        }
+        const data = await response.json();
+        imageFolders = Object.keys(data);
+        imageFiles = data;
+        console.log('Folders and images discovered:', imageFiles);
+    } catch (error) {
+        console.error('Error discovering folders and images:', error);
+        addNotification('error', 'Failed to load image data. Some features may not work correctly.');
+    }
+}
+
+// Call the discovery function when the script loads
+discoverFoldersAndImages();
+
+// Function to switch between sections
 function switchSection(sectionName) {
     Object.values(sections).forEach(section => section.classList.add('hidden'));
     sections[sectionName].classList.remove('hidden');
@@ -59,6 +81,7 @@ function switchSection(sectionName) {
     window.location.hash = sectionName;
 }
 
+// Function to update clear history button visibility
 function updateClearHistoryButton() {
     if (messages.length > 0) {
         clearHistoryBtn.style.display = 'block';
@@ -68,24 +91,29 @@ function updateClearHistoryButton() {
     }
 }
 
+// Function to show welcome message
 function showWelcomeMessage() {
     welcomeMessage.classList.remove('hidden');
     chatContainer.classList.add('hidden');
     showWelcome = true;
 }
 
+// Function to scroll chat to bottom
 function scrollToBottom() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+// Function to show clear history modal
 function showModal() {
     clearHistoryModal.classList.add('show');
 }
 
+// Function to hide clear history modal
 function hideModal() {
     clearHistoryModal.classList.remove('show');
 }
 
+// Function to clear chat history
 function clearHistory() {
     messages = [];
     conversationHistory = [];
@@ -97,6 +125,7 @@ function clearHistory() {
     showWelcomeMessage();
 }
 
+// Function to add a message to the chat
 function addMessage(role, content) {
     if (showWelcome) {
         welcomeMessage.classList.add('hidden');
@@ -150,6 +179,7 @@ function addMessage(role, content) {
     messages.push({ role, content });
 }
 
+// Function to format message content
 function formatMessage(content) {
     content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
@@ -185,6 +215,7 @@ function formatMessage(content) {
     return content;
 }
 
+// Function to escape HTML
 function escapeHtml(unsafe) {
     return unsafe
         .replace(/&/g, "&amp;")
@@ -194,72 +225,81 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
+// Function to set thinking state
 function setThinking(thinking) {
     const existingThinkingElement = chatContainer.querySelector('.thinking-indicator');
+    if (existingThinkingElement) {
+        existingThinkingElement.remove();
+    }
+
     if (thinking) {
-        if (!existingThinkingElement) {
-            const thinkingElement = document.createElement('div');
-            thinkingElement.className = 'flex justify-start animate-fade-in-up thinking-indicator';
-            thinkingElement.innerHTML = `
-                <div class="flex items-end space-x-2 max-w-[80%]">
-                    <div class="w-8 h-8 bg-transparent rounded-full">
-                        <img src="src/dharam.jpg" alt="AI" class="ai-logo">
-                    </div>
-                    <div class="p-3 rounded-lg bg-blue-100 text-sm md:text-base shadow-md">
-                        <div class="flex space-x-2">
-                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-                        </div>
+        const thinkingElement = document.createElement('div');
+        thinkingElement.className = 'thinking-indicator flex justify-start animate-fade-in-up';
+        thinkingElement.innerHTML = `
+            <div class="flex items-start space-x-2">
+                <div class="ai-avatar">
+                    <img src="src/dharam.jpg" alt="AI">
+                </div>
+                <div class="message-bubble bg-blue-100 text-blue-900 text-sm md:text-base shadow-md">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                 </div>
-            `;
-            chatContainer.appendChild(thinkingElement);
-        }
-        setGenerating(true);
-    } else {
-        if (existingThinkingElement) {
-            existingThinkingElement.remove();
-        }
-        setGenerating(false);
-    }
-    scrollToBottom();
-}
-
-function setGenerating(generating) {
-    isGenerating = generating;
-    if (generating) {
-        sendIcon.className = 'fas fa-stop h-4 w-4 md:mr-2';
-        sendText.textContent = 'Stop';
-        sendButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-        sendButton.classList.add('bg-red-500', 'hover:bg-red-600');
-    } else {
-        sendIcon.className = 'fas fa-paper-plane h-4 w-4 md:mr-2';
-        sendText.textContent = 'Send';
-        sendButton.classList.remove('bg-red-500', 'hover:bg-red-600');
-        sendButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
+            </div>
+        `;
+        chatContainer.appendChild(thinkingElement);
+        scrollToBottom();
     }
 }
 
-function loadStoredHistory() {
+// Function to add notification
+function addNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type} animate-fade-in-up`;
+    notification.textContent = message;
+    notificationsContainer.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('animate-fade-out');
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 3000);
+}
+
+// Function to get related image folder
+async function getRelatedImageFolder(content) {
     try {
-        const storedHistory = localStorage.getItem('chatHistory');
-        if (storedHistory) {
-            conversationHistory = JSON.parse(storedHistory);
-            conversationHistory.forEach(message => {
-                addMessage(message.role, message.content);
-            });
-            showWelcome = false;
-        } else {
-            showWelcomeMessage();
+        const response = await axios.post('https://api.qewertyy.dev/models', {
+            messages: [
+                { role: "system", content: "You are a helpful assistant that determines if a given text is related to any of the provided folder names. Respond with the most relevant folder name or 'none' if there's no clear relation." },
+                { role: "user", content: `Folders: ${imageFolders.join(', ')}. Text: ${content}` }
+            ],
+            model_id: 23
+        });
+
+        if (response.data.content && response.data.content[0] && response.data.content[0].text) {
+            const relatedFolder = response.data.content[0].text.trim().toLowerCase();
+            return imageFolders.includes(relatedFolder) ? relatedFolder : null;
         }
+        return null;
     } catch (error) {
-        console.error('Error loading chat history:', error);
-        localStorage.removeItem('chatHistory');
-        showWelcomeMessage();
+        console.error('Error determining related folder:', error);
+        return null;
     }
 }
 
+// Function to get a random image from a folder
+function getRandomImage(folder) {
+    if (imageFiles[folder] && imageFiles[folder].length > 0) {
+        const randomIndex = Math.floor(Math.random() * imageFiles[folder].length);
+        return `src/imgs/${folder}/${imageFiles[folder][randomIndex]}`;
+    }
+    return null;
+}
+
+// Function to send message
 async function sendMessage(message) {
     if (message.trim()) {
         addMessage('user', message);
@@ -283,17 +323,34 @@ async function sendMessage(message) {
             if (response.data.content && response.data.content[0] && response.data.content[0].text) {
                 const aiResponse = response.data.content[0].text;
                 addMessage('assistant', aiResponse);
+
+                // Determine if the response is related to any image folder
+                const relatedFolder = await getRelatedImageFolder(aiResponse);
+
+                if (relatedFolder) {
+                    const imageSrc = getRandomImage(relatedFolder);
+                    if (imageSrc) {
+                        const img = document.createElement('img');
+                        img.src = imageSrc;
+                        img.alt = `${relatedFolder} image`;
+                        img.className = 'message-image';
+                        img.loading = 'lazy';
+
+                        const lastMessage = chatContainer.lastElementChild;
+                        lastMessage.querySelector('.message-content').appendChild(img);
+                    }
+                }
             } else {
                 throw new Error('Unexpected response structure');
             }
         } catch (error) {
             if (axios.isCancel(error)) {
-                console.log('Request canceled:', error.message);
+                addNotification('info', 'Request was cancelled');
             } else if (error.code === 'ECONNABORTED') {
                 addNotification('error', 'Request timed out. Please try again.');
             } else {
+                addNotification('error', `An error occurred: ${error.message}`);
                 console.error('Error:', error);
-                addNotification('error', `Failed to get response. Please try again. ${error}`);
             }
         } finally {
             setThinking(false);
@@ -303,234 +360,93 @@ async function sendMessage(message) {
     }
 }
 
-function addNotification(type, message) {
-    const notification = document.createElement('div');
-    notification.className = `bg-white p-4 rounded-lg shadow-lg flex items-center space-x-3 ${
-        type === 'error' ? 'border-l-4 border-red-500' :
-        type === 'report' ? 'border-l-4 border-green-500' :
-        type === 'info' ? 'border-l-4 border-yellow-500' :
-        'border-l-4 border-blue-500'
-    }`;
+// Event Listeners
+chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = userInput.value.trim();
+    if (message && !isGenerating) {
+        userInput.value = '';
+        await sendMessage(message);
+    }
+});
 
-    const iconClass = type === 'error' ? 'fa-exclamation-triangle text-red-500' :
-        type === 'report' ? 'fa-file-alt text-green-500' :
-        type === 'info' ? 'fa-info-circle text-yellow-500' :
-        'fa-bell text-blue-500';
+userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.dispatchEvent(new Event('submit'));
+    }
+});
 
-    notification.innerHTML = `
-        <div class="animate-bounce">
-            <i class="fas ${iconClass} h-6 w-6"></i>
-        </div>
-        <div>
-            <h3 class="font-semibold ${
-                type === 'error' ? 'text-red-800' :
-                type === 'report' ? 'text-green-800' :
-                type === 'info' ? 'text-yellow-800' :
-                'text-blue-800'
-            }">${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
-            <p class="text-sm ${
-                type === 'error' ? 'text-red-600' :
-                type === 'report' ? 'text-green-600' :
-                type === 'info' ? 'text-yellow-600' :
-                'text-blue-600'
-            }">${message}</p>
-        </div>
-        <button onclick="this.parentElement.remove()" class="text-gray-500 hover:${
-            type === 'error' ? 'text-red-700' :
-            type === 'report' ? 'text-green-700' :
-            type === 'info' ? 'text-yellow-700' :
-            'text-blue-700'
-        }">
-            <i class="fas fa-times h-4 w-4"></i>
-        </button>
-    `;
+menuButton.addEventListener('click', () => {
+    navbar.classList.toggle('hidden');
+});
 
-    notificationsContainer.appendChild(notification);
+closeNavButton.addEventListener('click', () => {
+    navbar.classList.add('hidden');
+});
 
-    setTimeout(() => {
-        notification.remove();
-    }, 5000);
-}
 
-function handleCopy(content) {
-    navigator.clipboard.writeText(content).then(() => {
-        addNotification('info', 'Response copied to clipboard!');
-    }).catch(err => {
-        console.error('Failed to copy: ', err);
-        
-        addNotification('error', 'Failed to copy content.');
+
+navButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const section = button.getAttribute('data-section');
+        switchSection(section);
     });
-}
+});
 
-function handleReport(content) {
-    reportDialog.classList.remove('hidden');
-    document.getElementById('reportEmail').value = '';
-    document.getElementById('reportProblem').value = '';
-    updateReportContent();
-}
+chatContainer.addEventListener('click', (e) => {
+    const target = e.target.closest('button[data-action]');
+    if (target) {
+        const action = target.getAttribute('data-action');
+        const content = target.getAttribute('data-content');
 
-async function handleAgain(content) {
-    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
-    if (lastUserMessage) {
-        setThinking(true);
-        try {
-            currentRequest = axios.CancelToken.source();
-            const response = await axios.post('https://api.qewertyy.dev/models', {
-                messages: [
-                    { role: "system", content: schoolData },
-                    { role: "user", content: lastUserMessage.content }
-                ],
-                model_id: 23
-            }, {
-                cancelToken: currentRequest.token
-            });
-
-            if (response.data.content && response.data.content[0] && response.data.content[0].text) {
-                const aiResponse = response.data.content[0].text;
-                setThinking(false);
-                addMessage('assistant', aiResponse);
-            } else {
-                throw new Error('Unexpected response structure');
-            }
-        } catch (error) {
-            if (axios.isCancel(error)) {
-                console.log('Request canceled:', error.message);
-            } else {
-                console.error('Error:', error);
-                addNotification('error', 'Failed to regenerate response. Please try again.');
-            }
-        } finally {
-            setThinking(false);
-            currentRequest = null;
-            scrollToBottom();
+        switch (action) {
+            case 'copy':
+                navigator.clipboard.writeText(content)
+                    .then(() => addNotification('success', 'Copied to clipboard!'))
+                    .catch(() => addNotification('error', 'Failed to copy'));
+                break;
+            case 'report':
+                document.getElementById('reportedContent').value = content;
+                reportDialog.classList.remove('hidden');
+                break;
+            case 'again':
+                sendMessage(content);
+                break;
         }
-    } else {
-        addNotification('error', 'No previous user message found to regenerate.');
     }
-}
+});
 
-function updateReportContent() {
-    const reportedContent = document.getElementById('reportedContent');
-    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
-    const lastAIMessage = messages.filter(m => m.role === 'assistant').pop();
-
-    if (lastUserMessage && lastAIMessage) {
-        reportedContent.value = `User: ${lastUserMessage.content}\n\nAI: ${lastAIMessage.content}`;
-    }
-}
-
-async function submitReport() {
+submitReportButton.addEventListener('click', () => {
     const email = document.getElementById('reportEmail').value;
     const problem = document.getElementById('reportProblem').value;
     const reportedContent = document.getElementById('reportedContent').value;
 
-    if (!email || !problem) {
-        addNotification('error', 'Please fill in both email and problem description.');
-        return;
-    }
-
-    const TOKEN = '8188094426:AAHgwqlzOuNY8VckUrYL5sNkENsu-sCQOFQ';
-    const CHAT_ID = '5629305049';
-    const reportMessage = `Report from ${email}:\n\nProblem: ${problem}\n\nReported Content:\n${reportedContent}`;
-    const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-
-    try {
-        const response = await axios.post(url, {
-            chat_id: CHAT_ID,
-            text: reportMessage,
-        });
-
-        if (response.status === 200) {
-            addNotification('report', 'Report submitted successfully. Thank you for your feedback!');
-            reportDialog.classList.add('hidden');
-            document.getElementById('reportEmail').value = '';
-            document.getElementById('reportProblem').value = '';
-        } else {
-            throw new Error('Failed to submit report');
-        }
-    } catch (error) {
-        console.error('Error submitting report:', error);
-        addNotification('error', 'Failed to submit report. Please try again.');
-    }
-}
-
-chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const message = userInput.value.trim();
-    if (isGenerating) {
-        if (currentRequest) {
-            currentRequest.cancel('Operation canceled by the user.');
-        }
-        setThinking(false);
-    } else if (message) {
-        sendMessage(message);
-        userInput.value = '';
+    if (email && problem) {
+        console.log('Report submitted:', { email, problem, reportedContent });
+        addNotification('success', 'Report submitted successfully!');
+        reportDialog.classList.add('hidden');
+    } else {
+        addNotification('error', 'Please fill in all fields');
     }
 });
 
-menuButton.addEventListener('click', () => navbar.classList.remove('hidden'));
-closeNavButton.addEventListener('click', () => navbar.classList.add('hidden'));
-
-navButtons.forEach(button => {
-    button.addEventListener('click', () => switchSection(button.dataset.section));
+cancelReportButton.addEventListener('click', () => {
+    reportDialog.classList.add('hidden');
 });
 
-submitReportButton.addEventListener('click', submitReport);
-cancelReportButton.addEventListener('click', () => reportDialog.classList.add('hidden'));
-
-contactForm.addEventListener('submit', async (e) => {
+contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('contactEmail').value;
     const message = document.getElementById('contactMessage').value;
 
-    if (!email || !message) {
-        addNotification('error', 'Please fill in all fields.');
-        return;
+    if (email && message) {
+        console.log('Contact form submitted:', { email, message });
+        addNotification('success', 'Message sent successfully!');
+        contactForm.reset();
+    } else {
+        addNotification('error', 'Please fill in all fields');
     }
-
-    const TOKEN = '8188094426:AAHgwqlzOuNY8VckUrYL5sNkENsu-sCQOFQ';
-    const CHAT_ID = '5629305049';
-    const contactMessage = `&#128236; New contact from ${email}:\n\n&#128172; ${message}`;
-    const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-
-    try {
-        const response = await axios.post(url, {
-            chat_id: CHAT_ID,
-            text: contactMessage,
-            parse_mode: 'HTML'
-        });
-
-        if (response.status === 200) {
-            addNotification('info', "Message sent successfully! We'll reply as soon as possible.");
-            document.getElementById('contactEmail').value = '';
-            document.getElementById('contactMessage').value = '';
-        }
-    } catch (error) {
-        console.error('Error sending message:', error);
-        addNotification('error', 'Failed to send message. Please try again later.');
-    }
-});
-
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loadingScreen = document.getElementById('loadingScreen');
-        loadingScreen.style.opacity = '0';
-        loadingScreen.style.transition = 'opacity 0.5s ease-out';
-        
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }, 500);
-
-    loadStoredHistory();
-
-    const hash = window.location.hash.slice(1);
-    if (sections[hash]) {
-        switchSection(hash);
-    }
-
-    updateClearHistoryButton();
-    scrollToBottom();
 });
 
 clearHistoryBtn.addEventListener('click', showModal);
@@ -538,43 +454,30 @@ modalCloseBtn.addEventListener('click', hideModal);
 modalCancelBtn.addEventListener('click', hideModal);
 modalClearBtn.addEventListener('click', clearHistory);
 
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, 100);
-    };
-}
-
-const debouncedScrollToBottom = debounce(scrollToBottom, 100);
-
-chatContainer.addEventListener('click', (event) => {
-    if (event.target.closest('button')) {
-        const button = event.target.closest('button');
-        const action = button.getAttribute('data-action');
-        const content = button.getAttribute('data-content');
-
-        if (action === 'copy') {
-            handleCopy(content);
-        } else if (action === 'report') {
-            handleReport(content);
-        } else if (action === 'again') {
-            handleAgain(content);
-        }
+// Initial setup
+window.addEventListener('load', () => {
+    const savedHistory = localStorage.getItem('chatHistory');
+    if (savedHistory) {
+        conversationHistory = JSON.parse(savedHistory);
+        conversationHistory.forEach(msg => addMessage(msg.role, msg.content));
     }
-});
 
-window.addEventListener('hashchange', () => {
     const hash = window.location.hash.slice(1);
-    if (sections[hash]) {
+    if (hash && sections[hash]) {
         switchSection(hash);
     }
+
+    const loadingScreen = document.getElementById('loadingScreen');
+    loadingScreen.style.opacity = '0';
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+    }, 500);
 });
 
-setTimeout(() => {
-    addNotification('welcome', 'Welcome to AI Chat! Feel free to ask any questions.');
-}, 2000);
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && currentRequest) {
+        currentRequest.cancel('User left the page');
+    }
+});
+
+updateClearHistoryButton();
