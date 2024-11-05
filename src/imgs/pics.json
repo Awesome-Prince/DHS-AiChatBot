@@ -1,5 +1,5 @@
 {
-  "folder1": ["image1.jpg", "image2.png", "image3.gif"],
+  "annual_day": ["1.jpeg", "2.jpeg"],
   "folder2": ["photo1.jpg", "photo2.jpg"],
   "folder3": ["pic1.png", "pic2.jpg", "pic3.webp"]
 }
