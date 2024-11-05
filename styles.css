@@ -70,6 +70,7 @@ body {
     50% {
         transform: translateY(-5px);
     }
+
 }
 
 @keyframes spin {
@@ -317,4 +318,12 @@ code {
 
 #clearHistoryBtn:hover {
     background-color: #e5e7eb;
+}
+
+.message-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
