@@ -14,8 +14,26 @@ function WelcomePage() {
   }, []);
 
   const handleStartChatting = () => {
-    document.getElementById('welcomePage').style.display = 'none';
-    document.getElementById('mainContent').classList.remove('hidden');
+    try {
+      const welcomePage = document.getElementById('welcomePage');
+      const mainContent = document.getElementById('mainContent');
+      
+      if (welcomePage && mainContent) {
+        welcomePage.style.display = 'none';
+        mainContent.classList.remove('hidden');
+        mainContent.style.display = 'flex';
+        mainContent.style.flexDirection = 'column';
+        
+        // Trigger any necessary initialization for the main chat
+        if (typeof initializeChat === 'function') {
+          initializeChat();
+        }
+      } else {
+        console.error('Welcome page or main content elements not found');
+      }
+    } catch (error) {
+      console.error('Error transitioning to main chat:', error);
+    }
   };
 
   return (
@@ -88,7 +106,7 @@ function WelcomePage() {
             {[
               { icon: "🧠", title: "Intelligent Responses", description: "Get smart, contextual answers to your questions" },
               { icon: "🌟", title: "Personalized Learning", description: "Tailored to your unique educational needs" },
-              { icon: "🚀",   title: "Always Improving", description: "Constantly updated with the latest information" }
+              { icon: "🚀", title: "Always Improving", description: "Constantly updated with the latest information" }
             ].map((feature, index) => (
               <motion.div
                 key={index}
