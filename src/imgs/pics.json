@@ -1,8 +1,11 @@
 {
-  "annual_day": ["1.jpeg", "2.jpeg"],
-  "food_carnival": ["1.jpeg", "2.jpeg"],
+  "annual_day": ["a1.jpeg"],
+  "food_carnival": ["1.jpeg"],
+  "krishna_jayanthi": ["k1.jpeg"],
   "onam": ["O.jpeg"],
-  "annual_day": ["1.jpeg", "2.jpeg"],
-  "food_carnival": ["1.jpeg", "2.jpeg"],
-  "onam": ["O.jpeg"]
+  "quiz_mania": ["q1.jpeg"],
+  "rangoli": ["r1.jpeg"],
+  "sports_day": ["s1.jpeg"],
+  "teachersday": ["t1.jpeg"],
+  "zonals": ["z1.jpeg"]
 }
