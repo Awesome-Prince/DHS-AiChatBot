@@ -1,5 +1,5 @@
 <div align="center">
-
+#
 # 🌟 DHS AI Chat Interface 3.0 🚀
 
 <img src="src/dharam.png" alt="Dharam Logo" width="200" height="200" style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
